@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.9",
+    "firebase": "10.0.0",
+    "firebase-admin": "11.9.0",
+    "next": "latest",
+    "protobufjs": "^7.2.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.4.1",
+    "@types/react": "18.2.14",
+    "typescript": "5.1.6"
+  }
+}
