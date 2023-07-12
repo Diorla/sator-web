@@ -5,7 +5,9 @@
  * @returns [hours, minutes]
  */
 export default function minuteToArr(value: number) {
-  const minute = value % 60;
-  const hour = (value - minute) / 60;
+  const mm = value % 60;
+  const hh = (value - mm) / 60;
+  const hour = Number.isNaN(hh) ? 0 : hh;
+  const minute = Number.isNaN(mm) ? 0 : mm;
   return [hour, minute];
 }
