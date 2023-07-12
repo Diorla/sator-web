@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { TextField } from "@mui/material";
 
-export default function Welcome() {
+export default function Registration() {
   const {
     user: { id, email },
   } = useUser();

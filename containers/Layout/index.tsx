@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useUser from "../../context/user/useUser";
 import signUp from "../../services/signUp";
-import Welcome from "./Welcome";
+import Registration from "./Registration";
 import PageRender from "./PageRender";
 import Button from "@mui/material/Button";
 
@@ -22,7 +22,7 @@ export default function Layout({
   if (loading) return <div>Loading...</div>;
 
   if (user?.name) return <PageRender title={title}>{children}</PageRender>;
-  if (user) return <Welcome />;
+  if (user) return <Registration />;
   return (
     <div>
       <h1>You are not logged in!</h1>
