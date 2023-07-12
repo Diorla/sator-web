@@ -1,9 +1,9 @@
 import { useState } from "react";
 import useUser from "../../context/user/useUser";
-import Button from "../../components/Button";
 import signUp from "../../services/signUp";
 import Welcome from "./Welcome";
 import PageRender from "./PageRender";
+import Button from "@mui/material/Button";
 
 export default function Layout({
   title,

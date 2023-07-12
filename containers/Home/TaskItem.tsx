@@ -1,11 +1,10 @@
-import Typography from "../../components/Typography";
 import minuteToArr from "../../utils/minuteToArr";
 import { Schedule } from "../../utils/getSchedule";
 import useUser from "../../context/user/useUser";
 import addTime from "./addTime";
 import { useState } from "react";
 import TimeInput from "../../components/TimeInput";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 
 function TimeRenderer({ time }: { time: number }) {
   const [hh, mm] = minuteToArr(time);
@@ -40,7 +39,7 @@ export default function TaskItem({ task }: { task: Schedule }) {
         }}
       >
         <div style={{ flex: 1 }}>
-          <Typography type="h3">{task.name}</Typography>
+          <Typography variant="h3">{task.name}</Typography>
           <Typography>
             Today: <TimeRenderer time={task.todayTime} />
           </Typography>

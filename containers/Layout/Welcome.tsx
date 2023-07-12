@@ -1,16 +1,14 @@
 import { useState } from "react";
-import Input from "../../components/Input";
 import TimeInput from "../../components/TimeInput";
-import Typography from "../../components/Typography";
-import useTheme from "../../context/theme/useTheme";
 import User from "../../models/User";
 import useUser from "../../context/user/useUser";
 import DaySelector from "../../components/DaySelector";
-import Button from "../../components/Button";
 import createUser from "../../services/createUser";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import { TextField } from "@mui/material";
 
 export default function Welcome() {
-  const { breakpoints } = useTheme();
   const {
     user: { id, email },
   } = useUser();
@@ -30,18 +28,18 @@ export default function Welcome() {
     <div
       style={{
         margin: "auto",
-        maxWidth: breakpoints.sm,
+        maxWidth: 500,
         padding: "20px",
         textAlign: "center",
       }}
     >
-      <Typography type="h1" style={{ marginBottom: 8 }}>
+      <Typography style={{ marginBottom: 8 }} variant="h1">
         Welcome
       </Typography>
       <Typography style={{ marginBottom: 8 }}>
         To continue, please provide the following information
       </Typography>
-      <Input
+      <TextField
         label="First Name"
         helperText="What should we call you?"
         style={{ marginBottom: 8 }}
@@ -66,7 +64,6 @@ export default function Welcome() {
       />
       <DaySelector
         daysSelected={form.activeDays}
-        color="primary"
         label="Active days"
         onChange={(activeDays) => setForm({ ...form, activeDays })}
       />

@@ -1,8 +1,7 @@
 import Head from "next/head";
-import useTheme from "../../context/theme/useTheme";
 import Link from "next/link";
 import TaskProvider from "../../context/task";
-import { Button } from "@mui/material";
+import Button from "@mui/material/Button";
 import signOut from "../../services/signOut";
 
 export default function PageRender({
@@ -12,7 +11,6 @@ export default function PageRender({
   title: string;
   children: any;
 }) {
-  const { palette } = useTheme();
   return (
     <TaskProvider>
       <Head>
