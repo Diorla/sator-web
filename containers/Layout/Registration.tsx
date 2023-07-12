@@ -6,7 +6,8 @@ import DaySelector from "../../components/DaySelector";
 import createUser from "../../services/createUser";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { TextField } from "@mui/material";
+import { Grid, TextField } from "@mui/material";
+import minuteToArr from "../../utils/minuteToArr";
 
 export default function Registration() {
   const {
@@ -24,52 +25,72 @@ export default function Registration() {
     updatedAt: Date.now(),
     timer: [],
   });
+
+  const dailyQuota = form.weeklyQuota / form.activeDays.length;
+
+  const [dailyHours, dailyMinutes] = minuteToArr(dailyQuota);
+
+  console.log("form.weeklyQuota", form.weeklyQuota);
   return (
-    <div
-      style={{
+    <Grid
+      sx={{
         margin: "auto",
         maxWidth: 500,
         padding: "20px",
         textAlign: "center",
       }}
     >
-      <Typography style={{ marginBottom: 8 }} variant="h1">
-        Welcome
-      </Typography>
-      <Typography style={{ marginBottom: 8 }}>
-        To continue, please provide the following information
-      </Typography>
-      <TextField
-        label="First Name"
-        helperText="What should we call you?"
-        style={{ marginBottom: 8 }}
-        onChange={(e) => {
-          const target = e.target as HTMLInputElement;
-          setForm({ ...form, name: target.value });
+      <Grid
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
         }}
-      />
-      <TimeInput
-        value={form.weeklyQuota}
-        onChangeValue={(weeklyQuota) => setForm({ ...form, weeklyQuota })}
-        label="Weekly Hours"
-        helperText="How many hours do you want to use every week?"
-        style={{ marginBottom: 8 }}
-      />
-      <TimeInput
-        value={form.dailyMax}
-        onChangeValue={(dailyMax) => setForm({ ...form, dailyMax })}
-        label="Daily max"
-        helperText="Ideal amount of time you want to spend on a task"
-        style={{ marginBottom: 8 }}
-      />
-      <DaySelector
-        daysSelected={form.activeDays}
-        label="Active days"
-        onChange={(activeDays) => setForm({ ...form, activeDays })}
-      />
-      <Button onClick={() => createUser(form)} style={{ marginTop: 16 }}>
-        Continue
-      </Button>
-    </div>
+      >
+        <Typography style={{ marginBottom: 8 }} variant="h1">
+          Welcome
+        </Typography>
+        <Typography style={{ marginBottom: 12 }}>
+          To continue, please provide the following information
+        </Typography>
+        <TextField
+          label="Name"
+          helperText="What should we call you?"
+          style={{ marginBottom: 8 }}
+          onChange={(e) => {
+            const target = e.target as HTMLInputElement;
+            setForm({ ...form, name: target.value });
+          }}
+          size="small"
+          sx={{ flex: 1, mr: 1, ml: 1 }}
+        />
+        <TimeInput
+          value={form.weeklyQuota}
+          onChangeValue={(weeklyQuota) => setForm({ ...form, weeklyQuota })}
+          label="Weekly Hours"
+          helperText={`Ideal amount of time you want to spend on a task per week: ${dailyHours}h ${dailyMinutes}m`}
+          style={{ marginBottom: 8 }}
+        />
+        <TimeInput
+          value={form.dailyMax}
+          onChangeValue={(dailyMax) => setForm({ ...form, dailyMax })}
+          label="Daily max"
+          helperText="Ideal amount of time you want to spend on a task"
+          style={{ marginBottom: 8 }}
+        />
+        <DaySelector
+          daysSelected={form.activeDays}
+          label="Active days"
+          onChange={(activeDays) => setForm({ ...form, activeDays })}
+        />
+        <Button
+          onClick={() => createUser(form)}
+          style={{ marginTop: 16 }}
+          variant="contained"
+        >
+          Confirm
+        </Button>
+      </Grid>
+    </Grid>
   );
 }
