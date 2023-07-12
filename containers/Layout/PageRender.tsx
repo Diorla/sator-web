@@ -2,6 +2,8 @@ import Head from "next/head";
 import useTheme from "../../context/theme/useTheme";
 import Link from "next/link";
 import TaskProvider from "../../context/task";
+import { Button } from "@mui/material";
+import signOut from "../../services/signOut";
 
 export default function PageRender({
   title,
@@ -24,6 +26,7 @@ export default function PageRender({
           <Link href="/stats">Stats</Link>
           <Link href="/help">Help</Link>
           <Link href="/credits">Credits</Link>
+          <Button onClick={() => signOut()}>Logout</Button>
         </div>
       </div>
       <div className="page-container">{children}</div>
@@ -45,6 +48,7 @@ export default function PageRender({
           flex-direction: row;
           justify-content: space-around;
           max-width: 400px;
+          align-items: center;
         }
 
         .page-container {

@@ -28,7 +28,10 @@ export default function UserProvider({
     try {
       unsubscribe = onAuthStateChanged(auth, (currentUser) => {
         if (currentUser) watchUser(currentUser, setUser, setLoading);
-        else setLoading(false);
+        else {
+          setLoading(false);
+          setUser(null);
+        }
       });
     } catch (error) {
       setError(error);
