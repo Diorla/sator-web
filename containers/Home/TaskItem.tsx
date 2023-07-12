@@ -5,6 +5,7 @@ import useUser from "../../context/user/useUser";
 import addTime from "./addTime";
 import { useState } from "react";
 import TimeInput from "../../components/TimeInput";
+import { Button } from "@mui/material";
 
 function TimeRenderer({ time }: { time: number }) {
   const [hh, mm] = minuteToArr(time);
@@ -49,9 +50,9 @@ export default function TaskItem({ task }: { task: Schedule }) {
           <Typography>{task.description || "No description"}</Typography>
         </div>
 
-        <button onClick={() => addTime(task, user, task.todayTime, true)}>
+        <Button onClick={() => addTime(task, user, task.todayTime, true)}>
           Mark as done
-        </button>
+        </Button>
       </div>
       <div>
         <TimeInput value={time} onChangeValue={setTime} />
