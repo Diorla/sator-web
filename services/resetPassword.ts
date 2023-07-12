@@ -1,5 +1,7 @@
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-import app from "../../firebaseConfig";
+import createFirebaseApp from "../firebase/clientApp";
+
+const app = createFirebaseApp();
 
 const auth = getAuth(app);
 

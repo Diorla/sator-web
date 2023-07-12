@@ -15,7 +15,7 @@ export default function logError(
   err: Error
 ) {
   try {
-    if (__DEV__)
+    if (process.env.NODE_ENV === "development")
       console.log({
         identifier: identifier || "Anonymous",
         event: event || "Unidentified error",

@@ -1,10 +1,11 @@
 import { useState } from "react";
 import Task, { Priority } from "../../models/Task";
 import useUser from "../../context/user/useUser";
-import Input from "../../components/Input";
+// import TextField from "../../components/TextField";
 import TimeInput from "../../components/TimeInput";
 import createTask from "../../services/createTask";
 import { initialTask } from ".";
+import TextField from "@mui/material/TextField";
 
 export default function NoTask() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -18,7 +19,7 @@ export default function NoTask() {
       <button onClick={() => setDialogOpen(true)}>Add task</button>
       <dialog open={dialogOpen}>
         <div>
-          <Input
+          <TextField
             label="Name"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -36,7 +37,7 @@ export default function NoTask() {
               justifyContent: "space-between",
             }}
           >
-            <Input
+            <TextField
               type="color"
               label="Color"
               value={form.color}
