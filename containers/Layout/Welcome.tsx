@@ -54,7 +54,7 @@ export default function Welcome() {
         password: "Password required",
       });
     else if (!email) setError({ ...initial, email: "Email required" });
-    else setError({ ...initial, password: "Password required" });
+    else if (!password) setError({ ...initial, password: "Password required" });
   };
 
   // TODO: Add more checks

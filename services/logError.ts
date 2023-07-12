@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { setDoc, Timestamp } from "firebase/firestore";
-import uuid from "uuid";
+import { v4 } from "uuid";
 import { doc } from "../database/firestore";
 
 /**
@@ -26,7 +26,7 @@ export default function logError(
         err: err,
       });
     else
-      setDoc(doc("errors", String(uuid.v4())), {
+      setDoc(doc("errors", v4()), {
         err: JSON.stringify(err),
         identifier: identifier || "Anonymous",
         event: event || "Unidentified error",
