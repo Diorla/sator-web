@@ -31,7 +31,7 @@ export default function Welcome() {
   const [form, setForm] = useState(initial);
 
   const [error, setError] = useState(initial);
-  const [open, setOpen] = useState("signIn");
+  const [open, setOpen] = useState("");
 
   const onSignIn = () => {
     const { email, password } = form;
@@ -88,6 +88,7 @@ export default function Welcome() {
     else if (password !== confirmPassword)
       setError({ ...initial, confirmPassword: "Password does not match" });
   };
+  // TODO: Add toggle visibility to input
   return (
     <Landing>
       <AppBar

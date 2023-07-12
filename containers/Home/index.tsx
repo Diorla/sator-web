@@ -3,6 +3,7 @@ import { Priority } from "../../models/Task";
 import { v4 } from "uuid";
 import TaskItem from "./TaskItem";
 import NoTask from "./NoTask";
+import Nav from "./Nav";
 
 export const initialTask = {
   name: "",
@@ -22,7 +23,7 @@ const TaskList = () => {
   const { completed, uncompleted } = useTask();
 
   return (
-    <div>
+    <Nav>
       {uncompleted.map((task) => (
         <TaskItem key={task.id} task={task} />
       ))}
@@ -30,7 +31,7 @@ const TaskList = () => {
       {completed.map((task) => (
         <TaskItem key={task.id} task={task} />
       ))}
-    </div>
+    </Nav>
   );
 };
 export default function Home() {

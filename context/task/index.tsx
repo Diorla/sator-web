@@ -35,20 +35,13 @@ export default function TaskProvider({
           // remove archived tasks and return schedule
           const schedule = getSchedule(availableTask, user.activeDays);
 
-          const todo = [];
-          const isDone = [];
-          for (const task of schedule) {
-            if (dayjs(task.lastDone).isToday()) {
-              isDone.push(task);
-            } else if (task.timeRemaining) {
-              // If no time remaining, it was completed on a previous date
-              todo.push(task);
-            }
-          }
+          const completed = [];
+          const uncompleted = [];
 
           let todoTime = 0;
 
-          const uncompleted = todo
+          // const uncompleted = todo
+          const allSchedule = schedule
             // First sort by the last time they are done (lowest  to highest)
             .sort((a, b) => a.lastDone - b.lastDone)
             // Then by priority, which means if they have the same priority, last done trumps
@@ -72,7 +65,7 @@ export default function TaskProvider({
 
               todayTime -= doneToday;
               const thisWeek = timeRemaining - doneToday;
-              todoTime += todayTime;
+              todoTime += todayTime >= 0 ? todayTime : 0;
 
               return {
                 ...item,
@@ -82,13 +75,14 @@ export default function TaskProvider({
               };
             });
 
-          const completed = isDone.map((item) => {
-            const todayTime = getDoneTime(item);
-            return {
-              ...item,
-              todayTime,
-            };
-          });
+          for (const task of allSchedule) {
+            if (dayjs(task.lastDone).isToday()) {
+              completed.push(task);
+            } else if (task.timeRemaining) {
+              uncompleted.push(task);
+            }
+          }
+
           setLoading(false);
           setCompleted(completed);
           setUncompleted(uncompleted);
