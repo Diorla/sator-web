@@ -71,12 +71,14 @@ export default function TaskProvider({
                 }, 0);
 
               todayTime -= doneToday;
+              const thisWeek = timeRemaining - doneToday;
               todoTime += todayTime;
 
               return {
                 ...item,
                 todayTime: todayTime >= 0 ? todayTime : 0,
                 overflow: todoTime > today,
+                timeRemaining: thisWeek >= 0 ? thisWeek : 0,
               };
             });
 

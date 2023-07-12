@@ -2,12 +2,13 @@ import { setDoc } from "firebase/firestore";
 import Task from "../models/Task";
 import { doc } from "../database/firestore";
 import logError from "./logError";
-import uuid from "uuid";
+import { v4 } from "uuid";
 
 type Exclude = "createdAt" | "updatedAt" | "id";
 export type CreateTask = Omit<Task, Exclude>;
 export default async function createTask(data: CreateTask) {
-  const id = String(uuid.v4());
+  // const id = String(uuid.);
+  const id = v4();
   const formattedData: Task = {
     ...data,
     id,

@@ -12,7 +12,7 @@ export default function Typography({
   ...props
 }: TypographyProps) {
   const {
-    font: { h1, h2, h3, text, label },
+    font: { h1, h2, h3, text },
   } = useTheme();
 
   // const {size, weight, style } = h1;
@@ -25,6 +25,36 @@ export default function Typography({
             font-size: ${h1.size};
             font-style: ${h1.style};
             font-weight: ${h1.weight};
+            line-height: normal;
+          }
+        `}</style>
+      </h1>
+    );
+  }
+  if (type === "h2") {
+    return (
+      <h1 {...props}>
+        {children}
+        <style jsx>{`
+          h1 {
+            font-size: ${h2.size};
+            font-style: ${h2.style};
+            font-weight: ${h2.weight};
+            line-height: normal;
+          }
+        `}</style>
+      </h1>
+    );
+  }
+  if (type === "h3") {
+    return (
+      <h1 {...props}>
+        {children}
+        <style jsx>{`
+          h1 {
+            font-size: ${h3.size};
+            font-style: ${h3.style};
+            font-weight: ${h3.weight};
             line-height: normal;
           }
         `}</style>

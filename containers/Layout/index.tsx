@@ -2,21 +2,26 @@ import { useState } from "react";
 import useUser from "../../context/user/useUser";
 import Button from "../../components/Button";
 import signUp from "../../services/signUp";
-import useTheme from "../../context/theme/useTheme";
 import Welcome from "./Welcome";
+import PageRender from "./PageRender";
 
-export default function Layout() {
+export default function Layout({
+  title,
+  children,
+}: {
+  title: string;
+  children: any;
+}) {
   const { loading, user } = useUser();
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
-  const { palette, main } = useTheme();
 
   console.log("user", user);
   if (loading) return <div>Loading...</div>;
 
-  if (user?.name) return <div>Hello there: {user?.name}</div>;
+  if (user?.name) return <PageRender title={title}>{children}</PageRender>;
   if (user) return <Welcome />;
   return (
     <div>

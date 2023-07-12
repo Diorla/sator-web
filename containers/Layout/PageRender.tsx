@@ -1,0 +1,56 @@
+import Head from "next/head";
+import useTheme from "../../context/theme/useTheme";
+import Link from "next/link";
+import TaskProvider from "../../context/task";
+
+export default function PageRender({
+  title,
+  children,
+}: {
+  title: string;
+  children: any;
+}) {
+  const { palette } = useTheme();
+  return (
+    <TaskProvider>
+      <Head>
+        <title>{title}</title>
+      </Head>
+      <div className="app-bar">
+        <Link href="/">Home</Link>
+        <div className="links">
+          <Link href="/profile">Profile</Link>
+          <Link href="/tasks">Tasks</Link>
+          <Link href="/stats">Stats</Link>
+          <Link href="/help">Help</Link>
+          <Link href="/credits">Credits</Link>
+        </div>
+      </div>
+      <div className="page-container">{children}</div>
+      <style jsx>{`
+        .app-bar {
+          height: 40px;
+          margin: 0;
+          position: sticky;
+          top: 0;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0 10px;
+        }
+        .links {
+          flex: 1;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          max-width: 400px;
+        }
+
+        .page-container {
+          min-height: calc(100vh - 40px);
+        }
+      `}</style>
+    </TaskProvider>
+  );
+}

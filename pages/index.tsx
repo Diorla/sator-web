@@ -1,8 +1,10 @@
-import { useState } from "react";
-import useUser from "../context/user/useUser";
-import signIn from "../services/signIn";
+import Home from "../containers/Home";
 import Layout from "../containers/Layout";
 
-export default function Home() {
-  return <Layout></Layout>;
+export default function HomePage() {
+  return (
+    <Layout title="Sator - home">
+      <Home />
+    </Layout>
+  );
 }
