@@ -1,9 +1,7 @@
-import { useState } from "react";
 import useUser from "../../context/user/useUser";
-import signUp from "../../services/signUp";
 import Registration from "./Registration";
 import PageRender from "./PageRender";
-import Button from "@mui/material/Button";
+import Welcome from "./Welcome";
 
 export default function Layout({
   title,
@@ -13,38 +11,11 @@ export default function Layout({
   children: any;
 }) {
   const { loading, user } = useUser();
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
 
   console.log("user", user);
   if (loading) return <div>Loading...</div>;
 
   if (user?.name) return <PageRender title={title}>{children}</PageRender>;
   if (user) return <Registration />;
-  return (
-    <div>
-      <h1>You are not logged in!</h1>
-      <input
-        value={form.email}
-        onChange={(e) =>
-          setForm({
-            ...form,
-            email: e.target.value,
-          })
-        }
-      />
-      <input
-        value={form.password}
-        onChange={(e) =>
-          setForm({
-            ...form,
-            password: e.target.value,
-          })
-        }
-      />
-      <Button onClick={() => signUp(form.email, form.password)}>Login</Button>
-    </div>
-  );
+  return <Welcome />;
 }

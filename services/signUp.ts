@@ -6,9 +6,5 @@ const app = createFirebaseApp();
 const auth = getAuth(app);
 
 export default async function signUp(email: string, password: string) {
-  try {
-    return createUserWithEmailAndPassword(auth, email, password);
-  } catch (err) {
-    logError(email, "signing in", err);
-  }
+  return createUserWithEmailAndPassword(auth, email, password);
 }
