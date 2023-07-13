@@ -4,7 +4,7 @@ import useUser from "../../context/user/useUser";
 import addTime from "./addTime";
 import { useState } from "react";
 import TimeInput from "../../components/TimeInput";
-import { Button, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 
 function TimeRenderer({ time }: { time: number }) {
   const [hh, mm] = minuteToArr(time);
@@ -53,17 +53,18 @@ export default function TaskItem({ task }: { task: Schedule }) {
           Mark as done
         </Button>
       </div>
-      <div>
+      <Grid sx={{ display: "flex", alignItems: "center" }}>
         <TimeInput value={time} onChangeValue={setTime} />
-        <button
+        <Button
+          variant="outlined"
           onClick={() => {
             addTime(task, user, time, false);
             setTime(0);
           }}
         >
-          Add time
-        </button>
-      </div>
+          Add
+        </Button>
+      </Grid>
     </div>
   );
 }
