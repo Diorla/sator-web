@@ -31,7 +31,11 @@ export default function Nav({ children }: { children: React.ReactNode }) {
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
+      <Typography
+        variant="h1"
+        sx={{ my: 2, cursor: "pointer" }}
+        onClick={() => router.push("/")}
+      >
         Sator
       </Typography>
       <Divider />
@@ -82,9 +86,13 @@ export default function Nav({ children }: { children: React.ReactNode }) {
             <MenuIcon />
           </IconButton>
           <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+            variant="h1"
+            onClick={() => router.push("/")}
+            sx={{
+              flexGrow: 1,
+              cursor: "pointer",
+              display: { xs: "none", sm: "block" },
+            }}
           >
             Sator
           </Typography>

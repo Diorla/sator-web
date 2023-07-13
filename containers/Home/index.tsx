@@ -9,7 +9,6 @@ import getTimeLeft from "../../utils/getTimeLeft";
 import TimeRenderer from "../../components/TimeRenderer";
 import Grid from "@mui/material/Grid";
 import isToday from "dayjs/plugin/isToday";
-import Nav from "./Nav";
 import { useEffect, useState } from "react";
 
 dayjs.extend(isToday);
@@ -47,10 +46,11 @@ const TaskList = () => {
 
   const deficit = today - todoTime;
   return (
-    <Nav>
+    <>
       <Grid sx={{ display: "flex", alignItems: "center" }}>
-        Time: <TimeRenderer time={todoTime} />
-        {`, ${deficit > 0 ? "Extra " : "Over"}time: `}
+        Todo:&nbsp;
+        <TimeRenderer time={todoTime} />
+        {`, ${deficit > 0 ? "Extra " : "Over"}time:`}&nbsp;
         <TimeRenderer time={Math.abs(deficit)} />
       </Grid>
       {uncompleted.map((task) => (
@@ -60,14 +60,15 @@ const TaskList = () => {
         <>
           <hr />
           <Grid sx={{ display: "flex", alignItems: "center" }}>
-            Time: <TimeRenderer time={completedTime} />
+            Completed:&nbsp;
+            <TimeRenderer time={completedTime} />
           </Grid>
           {completed.map((task) => (
             <TaskItem key={task.id} task={task} />
           ))}
         </>
       ) : null}
-    </Nav>
+    </>
   );
 };
 
