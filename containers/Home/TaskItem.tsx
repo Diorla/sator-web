@@ -54,7 +54,7 @@ export default function TaskItem({ task }: { task: Schedule }) {
 
         {dayjs(task.lastDone).isToday() ? null : (
           <Button onClick={() => addTime(task, user, task.todayTime, true)}>
-            Mark as done
+            Done
           </Button>
         )}
       </div>
