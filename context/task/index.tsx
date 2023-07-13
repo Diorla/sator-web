@@ -5,7 +5,6 @@ import getSchedule from "../../utils/getSchedule";
 import { Unsubscribe } from "firebase/firestore";
 import dayjs from "dayjs";
 import getTimeLeft from "../../utils/getTimeLeft";
-import getDoneTime from "../../utils/getDoneTime";
 import useUser from "../user/useUser";
 import isToday from "dayjs/plugin/isToday";
 
@@ -20,8 +19,6 @@ export default function TaskProvider({
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [completed, setCompleted] = useState([]);
-  const [uncompleted, setUncompleted] = useState([]);
 
   const { today } = getTimeLeft(user);
   useEffect(() => {
@@ -29,24 +26,20 @@ export default function TaskProvider({
     try {
       if (user?.id) {
         unsubscribe = watchTasks(user?.id, (tasks) => {
-          setTasks(tasks);
-
-          const availableTask = tasks.filter((item) => !item.archived);
-          // remove archived tasks and return schedule
-          const schedule = getSchedule(availableTask, user.activeDays);
-
-          const completed = [];
-          const uncompleted = [];
+          const schedule = getSchedule(tasks, user.activeDays);
 
           let todoTime = 0;
 
-          // const uncompleted = todo
           const allSchedule = schedule
             // First sort by the last time they are done (lowest  to highest)
             .sort((a, b) => a.lastDone - b.lastDone)
             // Then by priority, which means if they have the same priority, last done trumps
             .sort((a, b) => b.priority - a.priority)
             .map((item) => {
+              if (item.archived)
+                return {
+                  ...item,
+                };
               const { daysRemaining, timeRemaining, record } = item;
 
               const current = timeRemaining / daysRemaining;
@@ -75,17 +68,40 @@ export default function TaskProvider({
               };
             });
 
-          for (const task of allSchedule) {
-            if (dayjs(task.lastDone).isToday()) {
-              completed.push(task);
-            } else if (task.timeRemaining) {
-              uncompleted.push(task);
-            }
-          }
+          setTasks(
+            allSchedule.map((task) => {
+              if (task.archived)
+                return {
+                  ...task,
+                  status: "archived",
+                };
+              if (dayjs(task.lastDone).isToday()) {
+                return {
+                  ...task,
+                  status: "completed",
+                };
+              } else if (task.timeRemaining) {
+                return {
+                  ...task,
+                  status: "uncompleted",
+                };
+              } else if (
+                Object.keys(task.record).find((time) => dayjs(time).isToday())
+              ) {
+                return {
+                  ...task,
+                  status: "uncompleted",
+                };
+              } else {
+                return {
+                  ...task,
+                  status: "ungrouped",
+                };
+              }
+            })
+          );
 
           setLoading(false);
-          setCompleted(completed);
-          setUncompleted(uncompleted);
         });
       }
     } catch (error) {
@@ -103,8 +119,6 @@ export default function TaskProvider({
         tasks,
         error,
         loading,
-        uncompleted,
-        completed,
       }}
     >
       {children}

@@ -6,6 +6,7 @@ export type Schedule = Task & {
   todayTime: number;
   overflow: boolean;
   daysRemaining: number;
+  status: "completed" | "uncompleted" | "archived" | "ungrouped";
 };
 
 /**
@@ -20,9 +21,10 @@ export default function getSchedule(tasks: Task[], activeDays: number[]) {
     schedule.push({
       ...task,
       timeRemaining,
+      daysRemaining,
       todayTime: 0,
       overflow: false,
-      daysRemaining,
+      status: "ungrouped",
     });
   });
   return schedule;

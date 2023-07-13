@@ -5,6 +5,9 @@ import addTime from "./addTime";
 import { useState } from "react";
 import TimeInput from "../../components/TimeInput";
 import { Button, Grid, Typography } from "@mui/material";
+import dayjs from "dayjs";
+import isToday from "dayjs/plugin/isToday";
+dayjs.extend(isToday);
 
 function TimeRenderer({ time }: { time: number }) {
   const [hh, mm] = minuteToArr(time);
@@ -49,9 +52,11 @@ export default function TaskItem({ task }: { task: Schedule }) {
           <Typography>{task.description || "No description"}</Typography>
         </div>
 
-        <Button onClick={() => addTime(task, user, task.todayTime, true)}>
-          Mark as done
-        </Button>
+        {dayjs(task.lastDone).isToday() ? null : (
+          <Button onClick={() => addTime(task, user, task.todayTime, true)}>
+            Mark as done
+          </Button>
+        )}
       </div>
       <Grid sx={{ display: "flex", alignItems: "center" }}>
         <TimeInput value={time} onChangeValue={setTime} />
@@ -61,6 +66,7 @@ export default function TaskItem({ task }: { task: Schedule }) {
             addTime(task, user, time, false);
             setTime(0);
           }}
+          size="small"
         >
           Add
         </Button>
