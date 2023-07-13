@@ -121,9 +121,9 @@ export default function Nav({ children }: { children: React.ReactNode }) {
           {drawer}
         </Drawer>
       </Box>
-      <Box component="main" sx={{ p: 3 }}>
+      <Box component="main" sx={{ margin: "auto" }}>
         <Toolbar />
-        <Typography>{children}</Typography>
+        {children}
       </Box>
     </Box>
   );
