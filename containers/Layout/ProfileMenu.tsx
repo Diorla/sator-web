@@ -1,5 +1,4 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
@@ -17,9 +16,7 @@ export default function ProfileMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const {
-    user: { name },
-  } = useUser();
+  const { user } = useUser();
   const router = useRouter();
 
   return (
@@ -33,7 +30,7 @@ export default function ProfileMenu() {
         color="inherit"
       >
         <Avatar sx={{ color: "black", bgcolor: "#fff", fontWeight: "500" }}>
-          {name.slice(0, 1)}
+          {user?.name?.slice(0, 1)}
         </Avatar>
       </IconButton>
       <Menu
