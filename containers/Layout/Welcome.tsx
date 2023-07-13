@@ -97,13 +97,10 @@ export default function Welcome() {
         position="static"
       >
         <Toolbar>
-          <Typography
-            variant="h1"
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
-          >
+          <Typography variant="h1" sx={{ flexGrow: 1 }}>
             Sator
           </Typography>
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+          <Box>
             <Button onClick={() => setOpen("signIn")}>Sign in</Button>
             <Button variant="contained" onClick={() => setOpen("signUp")}>
               Sign up
@@ -122,8 +119,16 @@ export default function Welcome() {
           },
         }}
       >
-        <Box>
-          <Typography>Scheduling done the right way</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h6" sx={{ textShadow: "0 0 white" }}>
+            Scheduling done the right way
+          </Typography>
           <Button variant="contained" color="secondary">
             Learn more
           </Button>
@@ -149,6 +154,7 @@ export default function Welcome() {
 
           <TextField
             label="Email"
+            type="email"
             variant="outlined"
             size="small"
             placeholder="example@email.com"
