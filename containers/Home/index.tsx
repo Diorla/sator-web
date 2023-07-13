@@ -19,7 +19,7 @@ export const initialTask = {
   id: v4(),
   description: "",
   priority: Priority.None,
-  color: "#ade01a",
+  color: "#" + Math.floor(Math.random() * 256 ** 3).toString(16),
   icon: "",
   weeklyQuota: 0,
   lastDone: 0,
@@ -90,7 +90,7 @@ export default function Home() {
     if (isCompleted) setStatus("completed");
     if (isRemain) setStatus("todo");
     if (!activeDays.includes(dayjs().day())) setStatus("rest");
-  }, []);
+  }, [tasks.length]);
 
   if (status === "rest") return <div>Rest day yea!</div>;
   if (status === "empty") return <NoTask />;
