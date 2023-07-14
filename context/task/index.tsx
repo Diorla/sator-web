@@ -24,86 +24,84 @@ export default function TaskProvider({
   useEffect(() => {
     let unsubscribe: Unsubscribe;
     try {
-      if (user?.id) {
-        unsubscribe = watchTasks(user?.id, (tasks) => {
-          const schedule = getSchedule(tasks, user.activeDays);
+      unsubscribe = watchTasks(user?.id, (tasks) => {
+        const schedule = getSchedule(tasks, user.activeDays);
 
-          let todoTime = 0;
+        let todoTime = 0;
 
-          const allSchedule = schedule
-            // First sort by the last time they are done (lowest  to highest)
-            .sort((a, b) => a.lastDone - b.lastDone)
-            // Then by priority, which means if they have the same priority, last done trumps
-            .sort((a, b) => b.priority - a.priority)
-            .map((item) => {
-              if (item.archived)
-                return {
-                  ...item,
-                };
-              const { daysRemaining, timeRemaining, record } = item;
-
-              const current = timeRemaining / daysRemaining;
-              let todayTime = current;
-              if (current < user.dailyMax) {
-                if (timeRemaining > user.dailyMax) todayTime = user.dailyMax;
-                if (timeRemaining < user.dailyMax) todayTime = timeRemaining;
-              }
-
-              const doneTimes = Object.keys(record);
-              const doneToday = doneTimes
-                .filter((time) => dayjs().isSame(dayjs(time), "date"))
-                .reduce((acc, time) => {
-                  return acc + record[time];
-                }, 0);
-
-              todayTime -= doneToday;
-              const thisWeek = timeRemaining - doneToday;
-              todoTime += todayTime >= 0 ? todayTime : 0;
-
+        const allSchedule = schedule
+          // First sort by the last time they are done (lowest  to highest)
+          .sort((a, b) => a.lastDone - b.lastDone)
+          // Then by priority, which means if they have the same priority, last done trumps
+          .sort((a, b) => b.priority - a.priority)
+          .map((item) => {
+            if (item.archived)
               return {
                 ...item,
-                todayTime: todayTime >= 0 ? todayTime : 0,
-                overflow: todoTime > today,
-                timeRemaining: thisWeek >= 0 ? thisWeek : 0,
               };
-            });
+            const { daysRemaining, timeRemaining, record } = item;
 
-          setTasks(
-            allSchedule.map((task) => {
-              if (task.archived)
-                return {
-                  ...task,
-                  status: "archived",
-                };
-              if (dayjs(task.lastDone).isToday()) {
-                return {
-                  ...task,
-                  status: "completed",
-                };
-              } else if (task.timeRemaining) {
-                return {
-                  ...task,
-                  status: "uncompleted",
-                };
-              } else if (
-                Object.keys(task.record).find((time) => dayjs(time).isToday())
-              ) {
-                return {
-                  ...task,
-                  status: "uncompleted",
-                };
-              } else {
-                return {
-                  ...task,
-                  status: "ungrouped",
-                };
-              }
-            })
-          );
+            const current = timeRemaining / daysRemaining;
+            let todayTime = current;
+            if (current < user.dailyMax) {
+              if (timeRemaining > user.dailyMax) todayTime = user.dailyMax;
+              if (timeRemaining < user.dailyMax) todayTime = timeRemaining;
+            }
 
-          setLoading(false);
-        });
-      }
+            const doneTimes = Object.keys(record);
+            const doneToday = doneTimes
+              .filter((time) => dayjs().isSame(dayjs(time), "date"))
+              .reduce((acc, time) => {
+                return acc + record[time];
+              }, 0);
+
+            todayTime -= doneToday;
+            const thisWeek = timeRemaining - doneToday;
+            todoTime += todayTime >= 0 ? todayTime : 0;
+
+            return {
+              ...item,
+              todayTime: todayTime >= 0 ? todayTime : 0,
+              overflow: todoTime > today,
+              timeRemaining: thisWeek >= 0 ? thisWeek : 0,
+            };
+          });
+
+        setTasks(
+          allSchedule.map((task) => {
+            if (task.archived)
+              return {
+                ...task,
+                status: "archived",
+              };
+            if (dayjs(task.lastDone).isToday()) {
+              return {
+                ...task,
+                status: "completed",
+              };
+            } else if (task.timeRemaining) {
+              return {
+                ...task,
+                status: "uncompleted",
+              };
+            } else if (
+              Object.keys(task.record).find((time) => dayjs(time).isToday())
+            ) {
+              return {
+                ...task,
+                status: "uncompleted",
+              };
+            } else {
+              return {
+                ...task,
+                status: "ungrouped",
+              };
+            }
+          })
+        );
+
+        setLoading(false);
+      });
     } catch (error) {
       setLoading(false);
       setError(error);

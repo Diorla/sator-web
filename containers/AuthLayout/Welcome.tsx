@@ -54,8 +54,6 @@ const FormModal = ({
 export default function Welcome() {
   const [modal, setModal] = useState<ModalType>();
 
-  console.log("modal", modal);
-
   // TODO: Add toggle visibility to input
   return (
     <Landing>

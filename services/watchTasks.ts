@@ -10,15 +10,13 @@ export default function watchTasks(
   try {
     const q = query(collection("tasks"), where("userId", "==", userId));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      // used this to make sure that it has been updated at the backend
-      let containPendingWrite = false;
       const tasks = [];
+      const pendingTasks = [];
       querySnapshot.forEach((doc) => {
-        tasks.push(doc.data());
-        containPendingWrite =
-          containPendingWrite || doc.metadata.hasPendingWrites;
+        if (doc.metadata.hasPendingWrites) pendingTasks.push(doc.data());
+        else tasks.push(doc.data());
       });
-      if (!containPendingWrite) callback(tasks);
+      if (tasks.length) callback([...tasks, ...pendingTasks]);
     });
     return unsubscribe;
   } catch (error) {

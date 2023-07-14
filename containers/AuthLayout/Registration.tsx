@@ -30,7 +30,6 @@ export default function Registration() {
 
   const [dailyHours, dailyMinutes] = minuteToArr(dailyQuota);
 
-  console.log("form.weeklyQuota", form.weeklyQuota);
   return (
     <Grid
       sx={{
