@@ -1,10 +1,10 @@
 import Home from "../containers/Home";
-import Layout from "../containers/Layout";
+import AuthLayout from "../containers/AuthLayout";
 
 export default function HomePage() {
   return (
-    <Layout title="Sator - home">
+    <AuthLayout title="Sator - home">
       <Home />
-    </Layout>
+    </AuthLayout>
   );
 }

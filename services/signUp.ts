@@ -1,5 +1,4 @@
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import logError from "./logError";
 import createFirebaseApp from "../firebase/clientApp";
 
 const app = createFirebaseApp();

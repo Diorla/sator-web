@@ -4,7 +4,13 @@ import PageRender from "./PageRender";
 import Welcome from "./Welcome";
 import { Box, CircularProgress } from "@mui/material";
 
-export default function Layout({
+/**
+ * This wraps the whole application in a layout.
+ * This only applies to pages that are protected by authentication.
+ * @param param0
+ * @returns
+ */
+export default function AuthLayout({
   title,
   children,
 }: {
@@ -13,21 +19,18 @@ export default function Layout({
 }) {
   const { loading, user } = useUser();
 
-  console.log("user", user);
   if (loading)
     return (
-      <PageRender title={title}>
-        <Box
-          style={{
-            height: "calc(100vh - 64px)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      </PageRender>
+      <Box
+        style={{
+          height: "calc(100vh - 64px)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
     );
 
   if (user?.name) return <PageRender title={title}>{children}</PageRender>;
