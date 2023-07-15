@@ -7,6 +7,8 @@ export type Schedule = Task & {
   overflow: boolean;
   daysRemaining: number;
   status: "completed" | "uncompleted" | "archived" | "ungrouped";
+  doneToday: number;
+  doneThisWeek: number;
 };
 
 /**
@@ -17,11 +19,14 @@ export type Schedule = Task & {
 export default function getSchedule(tasks: Task[], activeDays: number[]) {
   const schedule: Schedule[] = [];
   tasks.forEach((task) => {
-    const { timeRemaining, daysRemaining } = getTimeRemaining(task, activeDays);
+    const { timeRemaining, daysRemaining, doneToday, doneThisWeek } =
+      getTimeRemaining(task, activeDays);
     schedule.push({
       ...task,
       timeRemaining,
       daysRemaining,
+      doneToday,
+      doneThisWeek,
       todayTime: 0,
       overflow: false,
       status: "ungrouped",

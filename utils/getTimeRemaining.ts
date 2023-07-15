@@ -47,8 +47,16 @@ export default function getTimeRemaining(task: Task, activeDays: number[]) {
 
   const currentWeekRemaining = currentWeekQuota - doneThisWeekTime;
 
+  const doneToday = doneTimes
+    .filter((time) => dayjs().isSame(time, "date"))
+    .reduce((acc, time) => {
+      return (acc += record[time]);
+    }, 0);
+
   return {
+    doneToday,
     timeRemaining: currentWeekRemaining,
     daysRemaining: daysRemaining.length,
+    doneThisWeek: doneThisWeekTime,
   };
 }

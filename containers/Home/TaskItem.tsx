@@ -44,12 +44,17 @@ export default function TaskItem({ task }: { task: Schedule }) {
         <div style={{ flex: 1 }}>
           <Typography variant="h3">{task.name}</Typography>
           <Typography>
-            Today: <TimeRenderer time={task.todayTime} />
+            Today: <TimeRenderer time={task.todayTime} /> remaining,{" "}
+            <TimeRenderer time={task.doneToday} /> done.
           </Typography>
           <Typography>
             This week: <TimeRenderer time={task.timeRemaining} />
+            &nbsp; remaining,&nbsp;
+            <TimeRenderer time={task.doneThisWeek} /> done.
           </Typography>
-          <Typography>{task.description || "No description"}</Typography>
+          <Typography style={{ fontStyle: "italic" }}>
+            {task.description || "No description"}
+          </Typography>
         </div>
 
         {dayjs(task.lastDone).isToday() ? null : (
