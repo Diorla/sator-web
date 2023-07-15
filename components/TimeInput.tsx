@@ -10,6 +10,7 @@ export interface InputProps
   helperText?: string;
   value: number;
   onChangeValue: (value: number) => void;
+  error?: boolean;
 }
 export default function TimeInput({
   label,
@@ -18,6 +19,7 @@ export default function TimeInput({
   value,
   onChangeValue,
   style,
+  error,
 }: InputProps) {
   const [id, setId] = useState("");
   useEffect(() => {
@@ -33,7 +35,9 @@ export default function TimeInput({
       <Grid sx={{ textAlign: "start", ml: 1 }}>
         <FormLabel htmlFor={id}>{label}</FormLabel>
       </Grid>
-      <FormHelperText sx={{ ml: 1 }}>{helperText}</FormHelperText>
+      <FormHelperText error={error} sx={{ ml: 1 }}>
+        {helperText}
+      </FormHelperText>
       <Grid sx={{ display: "flex", pr: 1, pl: 1, flexWrap: "wrap" }}>
         <TextField
           id={id}
@@ -48,6 +52,7 @@ export default function TimeInput({
             const num = Number(e.target.value);
             onChangeValue(num * 60 + m);
           }}
+          error={error}
         />
         <TextField
           InputProps={{
@@ -61,6 +66,7 @@ export default function TimeInput({
             const num = Number(e.target.value);
             onChangeValue(h * 60 + num);
           }}
+          error={error}
         />
       </Grid>
       {children}

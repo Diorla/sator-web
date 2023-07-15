@@ -7,6 +7,7 @@ import TimeInput from "../../components/TimeInput";
 import { Button, Grid, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import isToday from "dayjs/plugin/isToday";
+import Link from "../../src/Link";
 dayjs.extend(isToday);
 
 function TimeRenderer({ time }: { time: number }) {
@@ -42,7 +43,9 @@ export default function TaskItem({ task }: { task: Schedule }) {
         }}
       >
         <div style={{ flex: 1 }}>
-          <Typography variant="h3">{task.name}</Typography>
+          <Link href={`/tasks/${task.id}`} sx={{ textDecoration: "none" }}>
+            <Typography variant="h3">{task.name}</Typography>
+          </Link>
           <Typography>
             Today: <TimeRenderer time={task.todayTime} /> remaining,{" "}
             <TimeRenderer time={task.doneToday} /> done.
