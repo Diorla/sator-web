@@ -10,6 +10,8 @@ import TimeRenderer from "../../components/TimeRenderer";
 import Grid from "@mui/material/Grid";
 import isToday from "dayjs/plugin/isToday";
 import { useEffect, useState } from "react";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 
 dayjs.extend(isToday);
 
@@ -78,6 +80,7 @@ export default function Home() {
     user: { activeDays },
   } = useUser();
 
+  const { loading } = useTask();
   const [status, setStatus] = useState("");
 
   useEffect(() => {
@@ -87,12 +90,25 @@ export default function Home() {
     const isCompleted = completed.length && !uncompleted.length;
     const isRemain = uncompleted.length;
     const isEmpty = !tasks.length;
-    if (isEmpty) setStatus("empty");
+    if (isEmpty && !loading) setStatus("empty");
     if (isCompleted) setStatus("completed");
     if (isRemain) setStatus("todo");
     if (!activeDays.includes(dayjs().day())) setStatus("rest");
   }, [tasks.length]);
 
+  if (loading || !status)
+    return (
+      <Box
+        style={{
+          height: "calc(100vh - 64px)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   if (status === "rest") return <div>Rest day yea!</div>;
   if (status === "empty") return <NoTask />;
   if (status === "todo") return <TaskList />;
