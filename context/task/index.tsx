@@ -43,9 +43,9 @@ export default function TaskProvider({
 
             const current = timeRemaining / daysRemaining;
             let todayTime = current;
-            if (current < user.dailyMax) {
+            if (current <= user.dailyMax) {
               if (timeRemaining > user.dailyMax) todayTime = user.dailyMax;
-              if (timeRemaining < user.dailyMax) todayTime = timeRemaining;
+              if (timeRemaining <= user.dailyMax) todayTime = timeRemaining;
             }
 
             const doneTimes = Object.keys(record);
