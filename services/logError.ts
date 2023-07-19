@@ -30,7 +30,7 @@ export default function logError(
         err: JSON.stringify(err),
         identifier: identifier || "Anonymous",
         event: event || "Unidentified error",
-        name: JSON.stringify(err?.name),
+        name: JSON.stringify(err?.name) + "- web",
         message: JSON.stringify(err?.message),
         stack: JSON.stringify(err?.stack),
         time: Timestamp.now(),
