@@ -17,10 +17,12 @@
     "firebase": "10.0.0",
     "firebase-admin": "11.9.0",
     "next": "latest",
+    "pluralize": "^8.0.0",
     "protobufjs": "^7.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.10.1",
+    "sator-packages": "^0.0.7",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

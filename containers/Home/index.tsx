@@ -1,117 +1,43 @@
-import useTask from "../../context/task/useTask";
-import { Priority } from "../../models/Task";
-import { v4 } from "uuid";
-import TaskItem from "./TaskItem";
-import NoTask from "./NoTask";
-import useUser from "../../context/user/useUser";
+import * as React from "react";
 import dayjs from "dayjs";
-import getTimeLeft from "../../utils/getTimeLeft";
-import TimeRenderer from "../../components/TimeRenderer";
-import Grid from "@mui/material/Grid";
 import isToday from "dayjs/plugin/isToday";
+import ItemList from "./ItemList";
+import useTask from "../../context/task/useTask";
 import { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
 
 dayjs.extend(isToday);
 
-export const initialTask = {
-  name: "",
-  id: v4(),
-  description: "",
-  priority: Priority.None,
-  color: "#" + Math.floor(Math.random() * 256 ** 3).toString(16),
-  icon: "",
-  weeklyQuota: 0,
-  lastDone: 0,
-  record: {},
-  userId: "",
-  createdAt: Date.now(),
-  updatedAt: Date.now(),
-};
-
-const TaskList = () => {
+export default function Switch() {
   const { tasks } = useTask();
-  const { user } = useUser();
-
-  const completed = tasks.filter((task) => task.status === "completed");
-  const uncompleted = tasks.filter((task) => task.status === "uncompleted");
-  const { today } = getTimeLeft(user);
-  const todoTime = uncompleted.reduce((acc, item) => acc + item.todayTime, 0);
-
-  const completedTime = tasks.reduce((acc, item) => {
-    const todayTime = Object.keys(item.record)
-      .filter((dateTimeKey) => dayjs(dateTimeKey).isToday())
-      .reduce((acc, dateTimeKey) => acc + item.record[dateTimeKey], 0);
-    return acc + todayTime;
-  }, 0);
-
-  const deficit = today - todoTime;
-  return (
-    <>
-      <Grid sx={{ display: "flex", alignItems: "center" }}>
-        Todo:&nbsp;
-        <TimeRenderer time={todoTime} />
-        {`, ${deficit > 0 ? "Extra " : "Over"}time:`}&nbsp;
-        <TimeRenderer time={Math.abs(deficit)} />
-      </Grid>
-      {uncompleted.map((task) => (
-        <TaskItem key={task.id} task={task} />
-      ))}
-      {completed.length ? (
-        <>
-          <hr />
-          <Grid sx={{ display: "flex", alignItems: "center" }}>
-            Completed:&nbsp;
-            <TimeRenderer time={completedTime} />
-          </Grid>
-          {completed.map((task) => (
-            <TaskItem key={task.id} task={task} />
-          ))}
-        </>
-      ) : null}
-    </>
+  const completed = tasks.filter((item) => item.status === "completed");
+  const todo = tasks.filter(
+    (item) => item.status === "uncompleted" && !item.overflow
   );
-};
-
-export default function Home() {
-  const { tasks } = useTask();
-  const {
-    user: { activeDays },
-  } = useUser();
-
-  const { loading } = useTask();
-  const [status, setStatus] = useState("");
+  const upcoming = tasks.filter(
+    (item) => item.status === "uncompleted" && item.overflow
+  );
+  const archived = tasks.filter((item) => item.status === "archived");
+  const running = tasks.filter((item) => item.currentTimer?.startTime);
+  const [completedToday, setCompletedToday] = useState(0);
 
   useEffect(() => {
-    const completed = tasks.filter((task) => task.status === "completed");
-    const uncompleted = tasks.filter((task) => task.status === "uncompleted");
+    const completedToday = tasks.reduce((acc, item) => acc + item.doneToday, 0);
 
-    const isCompleted = completed.length && !uncompleted.length;
-    const isRemain = uncompleted.length;
-    const isEmpty = !tasks.length;
-    if (isEmpty && !loading) setStatus("empty");
-    if (isCompleted) setStatus("completed");
-    if (isRemain) setStatus("todo");
-    if (!activeDays.includes(dayjs().day())) setStatus("rest");
-  }, [tasks.length]);
+    setCompletedToday(completedToday);
+  }, [tasks]);
 
-  if (loading || !status)
-    return (
-      <Box
-        style={{
-          height: "calc(100vh - 64px)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  if (status === "rest") return <div>Rest day yea!</div>;
-  if (status === "empty") return <NoTask />;
-  if (status === "todo") return <TaskList />;
-  if (status === "completed") return <h1>You have completed all tasks</h1>;
-  return null;
+  return (
+    <div style={{ flex: 1, marginBottom: 20 }}>
+      <div style={{ padding: 8 }}>
+        <ItemList
+          todo={todo}
+          upcoming={upcoming}
+          completed={completed}
+          archived={archived}
+          running={running}
+          completedToday={completedToday}
+        />
+      </div>
+    </div>
+  );
 }

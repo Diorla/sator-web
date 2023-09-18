@@ -10,53 +10,37 @@ import Task from "../models/Task";
  * @param task The particular task
  * @returns
  */
-export default function getTimeRemaining(task: Task, activeDays: number[]) {
-  const { record } = task;
-  const doneTimes = Object.keys(record);
-
-  // Remove the times that are done this week, but not today
-  const doneThisWeek = doneTimes.filter(
-    (time) =>
-      dayjs().isSame(dayjs(time), "week") &&
-      !dayjs().isSame(dayjs(time), "date")
-  );
-
-  const doneThisWeekTime = doneThisWeek.reduce((acc, time) => {
-    return (acc += record[time]);
-  }, 0);
-
-  const daysBeforeCreation = [];
-  const daysRemaining = [];
-  activeDays.forEach((day) => {
-    if (day >= dayjs().day()) {
-      daysRemaining.push(day);
-
-      if (
-        dayjs().isSame(task.createdAt, "week") &&
-        dayjs(task.createdAt).isAfter(dayjs().day(day), "day")
-      ) {
-        daysBeforeCreation.push(day);
-      }
-    }
+export default function getTimeRemaining(task: Task) {
+  const { record = {} } = task;
+  const doneTimes = Object.keys(record).map((item) => {
+    return {
+      date: record[item].date,
+      length: record[item].length,
+    };
   });
 
-  const typicalDailyQuota = task.weeklyQuota / activeDays.length;
-  const currentDaysLength = activeDays.length - daysBeforeCreation.length;
-
-  const currentWeekQuota = typicalDailyQuota * currentDaysLength;
-
-  const currentWeekRemaining = currentWeekQuota - doneThisWeekTime;
+  // Remove the times that are done this week, but not today
+  const doneThisWeek = doneTimes
+    .filter(
+      (item) =>
+        dayjs().isSame(dayjs(item.date), "week") &&
+        !dayjs().isSame(dayjs(item.date), "date")
+    )
+    .reduce((acc, item) => {
+      return (acc += item.length);
+    }, 0);
 
   const doneToday = doneTimes
-    .filter((time) => dayjs().isSame(time, "date"))
-    .reduce((acc, time) => {
-      return (acc += record[time]);
+    .filter((item) => dayjs().isSame(dayjs(item.date), "date"))
+    .reduce((acc, item) => {
+      return (acc += item.length);
     }, 0);
+
+  const timeRemaining = task.weeklyQuota - doneThisWeek;
 
   return {
     doneToday,
-    timeRemaining: currentWeekRemaining,
-    daysRemaining: daysRemaining.length,
-    doneThisWeek: doneThisWeekTime,
+    timeRemaining,
+    doneThisWeek,
   };
 }

@@ -1,84 +1,158 @@
-import minuteToArr from "../../utils/minuteToArr";
-import { Schedule } from "../../utils/getSchedule";
-import useUser from "../../context/user/useUser";
-import addTime from "./addTime";
-import { useState } from "react";
-import TimeInput from "../../components/TimeInput";
-import { Button, Grid, Typography } from "@mui/material";
+import * as React from "react";
 import dayjs from "dayjs";
-import isToday from "dayjs/plugin/isToday";
-import Link from "../../src/Link";
-dayjs.extend(isToday);
+import { getContrastColor } from "sator-packages";
+import RenderSchedule from "../../types/RenderSchedule";
+import Stopwatch from "../../components/Stopwatch";
+import TimeRenderer from "../../components/TimeRenderer";
+import Typography from "@mui/material/Typography";
+import Card from "@mui/material/Card";
+import Chip from "@mui/material/Chip";
+import priority from "../../constants/priority";
 
-function TimeRenderer({ time }: { time: number }) {
-  const [hh, mm] = minuteToArr(time);
+const RenderCentral = ({
+  isRunning,
+  task,
+  color,
+  centralContent,
+  centralMessage,
+}: {
+  isRunning: boolean;
+  task: RenderSchedule;
+  color: string;
+  centralContent: string | number;
+  centralMessage: string;
+}) => {
+  if (isRunning) return <Stopwatch task={task} color={color} />;
   return (
-    <span>
-      {hh}h {String(Math.round(mm)).padStart(2, "0")}
-    </span>
+    <>
+      {typeof centralContent === "number" ? (
+        <TimeRenderer time={centralContent} />
+      ) : (
+        <Typography style={{ color }}>{centralContent}</Typography>
+      )}
+      <Typography variant="body1" style={{ color }}>
+        {centralMessage}
+      </Typography>
+    </>
   );
-}
-export default function TaskItem({ task }: { task: Schedule }) {
-  const { user } = useUser();
-  const [time, setTime] = useState(0);
+};
+export default function TaskItem({
+  task,
+  showDate,
+}: {
+  task: RenderSchedule;
+  showDate?: boolean;
+}) {
+  // const navigate = useNavigate();
+  const color = getContrastColor(task.color);
+  const { status } = task;
+  // to-do message
+  let centralContent: string | number = task.todayTime - task.doneToday;
+  let centralMessage = "Today";
+  let bottomRight = ((task.doneToday / task.todayTime) * 100).toFixed(0) + "%";
+  if (status === "completed") {
+    centralContent = task.doneToday + task.doneThisWeek;
+    bottomRight =
+      (((task.doneToday + task.doneThisWeek) / task.weeklyQuota) * 100).toFixed(
+        0
+      ) + "%";
+    centralMessage = "Done this week";
+  } else if (status === "uncompleted") {
+    if (task.overflow) {
+      centralContent = task.timeRemaining - task.doneToday;
+      bottomRight =
+        (
+          ((task.doneToday + task.doneThisWeek) / task.weeklyQuota) *
+          100
+        ).toFixed(0) + "%";
+      centralMessage = "This week remaining";
+    }
+  } else if (status === "archived") {
+    const { record } = task;
+    let last = 0;
+    Object.keys(record).forEach((key) => {
+      if (record[key].date > last) last = record[key].date;
+    });
+    centralContent = last ? dayjs(last).format("DD MMM YYYY") : "Never";
+    centralMessage = "Last done";
+    bottomRight = dayjs(task.endAt).format("DD MMM YYYY");
+  }
 
   return (
-    <div
+    <Card
       style={{
-        alignItems: "center",
-        maxWidth: 500,
-        margin: "10px auto",
-        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
-        padding: "10px",
+        borderRadius: 8,
+        backgroundColor: task.color,
+        maxWidth: 700,
+        width: "90%",
+        color,
+        margin: "auto",
+        marginTop: 8,
+        marginBottom: 8,
       }}
     >
       <div
         style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          margin: 4,
           display: "flex",
-          alignItems: "center",
-          maxWidth: 500,
-          margin: "10px auto",
-          boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
-          padding: "10px",
         }}
       >
-        <div style={{ flex: 1 }}>
-          <Link href={`/tasks/${task.id}`} sx={{ textDecoration: "none" }}>
-            <Typography variant="h3">{task.name}</Typography>
-          </Link>
-          <Typography>
-            Today: <TimeRenderer time={task.todayTime} /> remaining,{" "}
-            <TimeRenderer time={task.doneToday} /> done.
-          </Typography>
-          <Typography>
-            This week: <TimeRenderer time={task.timeRemaining} />
-            &nbsp; remaining,&nbsp;
-            <TimeRenderer time={task.doneThisWeek} /> done.
-          </Typography>
-          <Typography style={{ fontStyle: "italic" }}>
-            {task.description || "No description"}
-          </Typography>
+        <Typography style={{ textAlign: "center", color }}>
+          {task.name}
+        </Typography>
+        <div style={{ flexDirection: "row", justifyContent: "center" }}>
+          {task.category && <Chip style={{ color }} label={task.category} />}
         </div>
-
-        {dayjs(task.lastDone).isToday() ? null : (
-          <Button onClick={() => addTime(task, user, task.todayTime, true)}>
-            Done
-          </Button>
+      </div>
+      <div
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+          alignItems: "center",
+          display: "flex",
+        }}
+      >
+        <div style={{ alignItems: "center" }}>
+          {showDate ? (
+            <>
+              <TimeRenderer time={task.weeklyQuota} />
+              <Typography style={{ color }}>Weekly quota</Typography>
+            </>
+          ) : (
+            <RenderCentral
+              isRunning={task.currentTimer?.isRunning}
+              task={task}
+              color={color}
+              centralContent={centralContent}
+              centralMessage={centralMessage}
+            />
+          )}
+        </div>
+      </div>
+      <div
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          margin: 4,
+          alignItems: "center",
+          display: "flex",
+        }}
+      >
+        <Typography style={{ color }}>{priority[task.priority]}</Typography>
+        {task.currentTimer?.isRunning ? (
+          <>
+            {typeof centralContent === "number" ? (
+              <TimeRenderer time={centralContent} />
+            ) : (
+              <Typography style={{ color }}>{centralContent}</Typography>
+            )}
+          </>
+        ) : (
+          <Typography style={{ color }}>{bottomRight}</Typography>
         )}
       </div>
-      <Grid sx={{ display: "flex", alignItems: "center" }}>
-        <TimeInput value={time} onChangeValue={setTime} />
-        <Button
-          variant="outlined"
-          onClick={() => {
-            addTime(task, user, time, false);
-            setTime(0);
-          }}
-          size="small"
-        >
-          Add
-        </Button>
-      </Grid>
-    </div>
+    </Card>
   );
 }

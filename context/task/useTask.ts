@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import taskContext from "./taskContext";
-import Task from "../../models/Task";
-import { Schedule } from "../../utils/getSchedule";
+import Schedule from "../../types/Schedule";
 
 export default function useTask() {
   interface TaskContext {
