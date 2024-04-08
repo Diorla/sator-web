@@ -1,4 +1,4 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -33,6 +33,12 @@ export default function Home() {
   if (user) {
     return (
       <main style={{ maxWidth: 480, margin: "auto" }}>
+        <div>
+          <Link href="/" passHref legacyBehavior>
+            <a>Home</a>
+          </Link>
+          <button onClick={() => signOut(auth)}>Log out</button>
+        </div>
         <div style={{ textAlign: "center" }}>
           Logged in as {user.displayName || user.email}
         </div>
